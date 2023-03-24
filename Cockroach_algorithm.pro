@@ -4,4 +4,10 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        main.cpp
+        csoalgorithm.cpp \
+        main.cpp \
+        testfunctions.cpp
+
+HEADERS += \
+    csoalgorithm.h \
+    testfunctions.h
