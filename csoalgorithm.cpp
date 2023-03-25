@@ -2,8 +2,10 @@
 #include <random>
 #include <vector>
 #include <iostream>
+#include "testfunctions.h"
 
-CSOAlgorithm::CSOAlgorithm(int numberOfCockroaches, int dim, int maxIterations, double lowerBound, double upperBound, double visual, double eps, double w, double (*testFunction)(std::vector<double>,int))
+CSOAlgorithm::CSOAlgorithm(int numberOfCockroaches, int dim, int maxIterations, double lowerBound, double upperBound, double visual, double eps, double w,
+                           double (*testFunction)(std::vector<double>,int))
 {
     this->numberOfCockroaches = numberOfCockroaches;
     this->dim = dim;
@@ -14,6 +16,7 @@ CSOAlgorithm::CSOAlgorithm(int numberOfCockroaches, int dim, int maxIterations, 
     this->eps = eps;
     this->w = w;
     this->testFunction = testFunction;
+
 }
 
 std::vector<double> CSOAlgorithm::generateRandomSolution(int dim, double lowerBound, double upperBound) {

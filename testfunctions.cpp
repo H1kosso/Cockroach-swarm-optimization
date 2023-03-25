@@ -5,7 +5,7 @@
 
 const double PI = 3.14159265;
 
-double TestFunctions::Schwefel(std::vector <double> x, int dim){
+double Schwefel(std::vector <double> x, int dim){
     double sum = 0.0;
     const double schwefelConst = 418.9829;
 
@@ -15,7 +15,7 @@ double TestFunctions::Schwefel(std::vector <double> x, int dim){
     return schwefelConst * dim - sum;
 }
 
-double TestFunctions::Rastring(std::vector <double> x, int dim){
+double Rastring(std::vector <double> x, int dim){
     double sum = 0.0;
     for(int i = 1; i <= dim; i++) {
         sum += (x[i-1] * x[i-1]) - 10 * cos(PI * 2 * x[i-1]);
@@ -23,7 +23,7 @@ double TestFunctions::Rastring(std::vector <double> x, int dim){
     return 10 * dim + sum;
 }
 
-double TestFunctions::HiperElipsoide(std::vector <double> x, int dim ){
+double HiperElipsoide(std::vector <double> x, int dim ){
     double sum = 0.0;
     for(int i = 1; i <= dim; i++) {
         sum += i * (x[i-1] * x[i-1]);

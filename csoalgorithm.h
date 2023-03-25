@@ -1,6 +1,7 @@
 #ifndef CSOALGORITHM_H
 #define CSOALGORITHM_H
 #include <vector>
+#include "testfunctions.h"
 
 class CSOAlgorithm
 {
@@ -24,7 +25,9 @@ private:
 
 
 public:
-    CSOAlgorithm(int numberOfCockroaches, int dim, int maxIterations, double lowerBound, double upperBound, double visual, double eps, double w, double (*testFunction)(std::vector<double>,int));
+    CSOAlgorithm(int numberOfCockroaches, int dim, int maxIterations, double lowerBound, double upperBound, double visual, double eps, double w,
+                 double (*testFunction)(std::vector<double>,int));
+
 
     std::vector<double> calculateGlobalOptimum();
 };
