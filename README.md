@@ -1,1 +1,0 @@
-# Cockroach-swarm-optimization
