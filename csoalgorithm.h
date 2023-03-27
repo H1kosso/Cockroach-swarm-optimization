@@ -1,5 +1,7 @@
 #ifndef CSOALGORITHM_H
 #define CSOALGORITHM_H
+#include <iostream>
+#include <random>
 #include <vector>
 
 #include "testfunctions.h"
@@ -14,6 +16,10 @@ private:
     double visual;
     double eps;
     double w;
+    std::random_device rd; // uniform int distribution.
+    std::mt19937 random; // pseudo random value, very fast
+    std::uniform_real_distribution<> bounds;
+
     double (*testFunction)(std::vector<double>&, int);
 
     std::vector<double> generateRandomSolution();
