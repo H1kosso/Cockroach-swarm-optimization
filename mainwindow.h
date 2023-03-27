@@ -20,9 +20,10 @@ public:
     void setDefaultParametersHiper();
     void setDefaultParametersRastring();
     void calculateResult();
+    void putGraph(std::vector<double> &allOptimums);
 
 private slots:
-    void on_schwefelButton_toggled(bool checked);
+    void on_schwefelButton_toggled();
 
     void on_rastringButton_clicked();
 

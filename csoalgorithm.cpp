@@ -1,5 +1,9 @@
 #include "csoalgorithm.h"
 
+#include <QChart>
+#include <QChartView>
+#include <QLineSeries>
+#include <QVBoxLayout>
 #include <iostream>
 #include <random>
 #include <vector>
@@ -40,7 +44,7 @@ std::vector<double> CSOAlgorithm::findGlobalOptimum(std::vector<std::vector<doub
 
     globalOptimum = cockroaches[0];
 
-    for (int i = 1; i < cockroaches.size(); i++) {
+    for (long long unsigned int i = 1; i < cockroaches.size(); i++) {
         if (testFunction(cockroaches[i], dim) < testFunction(globalOptimum, dim))
             globalOptimum = cockroaches[i];
     }
@@ -57,7 +61,7 @@ std::vector<double> CSOAlgorithm::updatePosition(std::vector<double> position,
     std::vector<double>              newPosition(position.size());
     double                           rand, delta;
 
-    for (int i = 0; i < position.size(); i++) {
+    for (long long unsigned int i = 0; i < position.size(); i++) {
         rand           = dis(random);
         delta          = rand * (optimumPosition[i] - position[i]);
         newPosition[i] = position[i] + stepSize * delta;
@@ -69,7 +73,7 @@ double CSOAlgorithm::diffCockroaches(std::vector<double> cockroaches_I,
                                      std::vector<double> cockroaches_II) {
     double sum = 0;
 
-    for (int i = 0; i < cockroaches_I.size(); i++) {
+    for (long long unsigned int i = 0; i < cockroaches_I.size(); i++) {
         sum +=
             fabs(cockroaches_I[i] - cockroaches_II[i]) * fabs(cockroaches_I[i] - cockroaches_II[i]);
     }
@@ -77,7 +81,7 @@ double CSOAlgorithm::diffCockroaches(std::vector<double> cockroaches_I,
     return sqrt(sum);
 }
 bool CSOAlgorithm::isLocalOptimum(std::vector<double> localOpt, std::vector<double> pos) {
-    for (int i = 0; i < localOpt.size(); i++) {
+    for (long long unsigned int i = 0; i < localOpt.size(); i++) {
         if (localOpt[i] != pos[i])
             return false;
     }
@@ -91,14 +95,14 @@ std::vector<double> CSOAlgorithm::updatePostionInLight(std::vector<double> posit
     std::uniform_real_distribution<> dis(0, 1);
     std::vector<double>              newPosition;
 
-    for (int i = 0; i < position.size(); i++) {
+    for (long long unsigned int i = 0; i < position.size(); i++) {
         newPosition.push_back(position[i] + dis(random));
     }
 
     return newPosition;
 }
 
-std::vector<double> CSOAlgorithm::calculateGlobalOptimum() {
+std::vector<double> CSOAlgorithm::calculateGlobalOptimum(std::vector<double> &allOptimums) {
     std::vector<double>              globalOptimum;
     std::vector<double>              localOptimum;
     std::vector<std::vector<double>> cockroaches;
@@ -156,10 +160,11 @@ std::vector<double> CSOAlgorithm::calculateGlobalOptimum() {
             cockroaches[k] = globalOptimum;
         }
         std::cout << "Iteration " << t << " ";
-        for (int i = 0; i < globalOptimum.size(); i++) {
+        for (long long unsigned int i = 0; i < globalOptimum.size(); i++) {
             std::cout << globalOptimum[i] << " ";
         }
         std::cout << std::endl;
+        allOptimums.push_back(testFunction(globalOptimum, dim));
     }
 
     return globalOptimum;
