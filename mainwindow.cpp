@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "testfunctions.h"
+#include "csoalgorithm.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -57,7 +57,7 @@ void MainWindow::calculateResult() {
     double lowerBound          = ui->lbET->toPlainText().toDouble();
     double upperBound          = ui->ubET->toPlainText().toDouble();
 
-    double (*testFunction)(std::vector<double>, int);
+    double (*testFunction)(std::vector<double>&, int);
 
     if (ui->schwefelButton->isChecked())
         testFunction = &Schwefel;
