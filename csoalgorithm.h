@@ -1,5 +1,6 @@
 #ifndef CSOALGORITHM_H
 #define CSOALGORITHM_H
+#include <QVBoxLayout>
 #include <vector>
 
 #include "testfunctions.h"
@@ -30,7 +31,7 @@ public:
                  double upperBound, double visual, double eśps, double w,
                  double (*testFunction)(std::vector<double>, int));
 
-    std::vector<double> calculateGlobalOptimum();
+    std::vector<double> calculateGlobalOptimum(std::vector<double> &allOptimums);
 };
 
 #endif  // CSOALGORITHM_H

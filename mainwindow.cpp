@@ -1,5 +1,11 @@
 #include "mainwindow.h"
 
+#include <QApplication>
+#include <QChart>
+#include <QChartView>
+#include <QLineSeries>
+#include <QValueAxis>
+#include <algorithm>
 #include <string>
 
 #include "testfunctions.h"
@@ -41,22 +47,22 @@ void MainWindow::setDefaultParametersHiper() {
     ui->dimET->setPlainText("2");
 }
 
-void MainWindow::on_schwefelButton_toggled(bool checked) { setDefaultParametersSchwefel(); }
+void MainWindow::on_schwefelButton_toggled() { setDefaultParametersSchwefel(); }
 
 void MainWindow::on_rastringButton_clicked() { MainWindow::setDefaultParametersRastring(); }
 
 void MainWindow::on_hiperButton_clicked() { MainWindow::setDefaultParametersHiper(); }
 
 void MainWindow::calculateResult() {
-    int    numberOfCockroaches = ui->cockroachNumberET->toPlainText().toInt();
-    int    maxIterations       = ui->maxIterationsET->toPlainText().toInt();
-    double eps                 = 0.001;
-    double visual              = ui->visibilityET->toPlainText().toDouble();
-    int    dim                 = ui->dimET->toPlainText().toInt();
-    double W                   = 0.1;
-    double lowerBound          = ui->lbET->toPlainText().toDouble();
-    double upperBound          = ui->ubET->toPlainText().toDouble();
-
+    int                 numberOfCockroaches = ui->cockroachNumberET->toPlainText().toInt();
+    int                 maxIterations       = ui->maxIterationsET->toPlainText().toInt();
+    double              eps                 = 0.001;
+    double              visual              = ui->visibilityET->toPlainText().toDouble();
+    int                 dim                 = ui->dimET->toPlainText().toInt();
+    double              W                   = 0.1;
+    double              lowerBound          = ui->lbET->toPlainText().toDouble();
+    double              upperBound          = ui->ubET->toPlainText().toDouble();
+    std::vector<double> allOptimums;
     double (*testFunction)(std::vector<double>, int);
 
     if (ui->schwefelButton->isChecked())
@@ -68,11 +74,48 @@ void MainWindow::calculateResult() {
 
     CSOAlgorithm algorytm(numberOfCockroaches, dim, maxIterations, lowerBound, upperBound, visual,
                           eps, W, testFunction);
-    std::vector<double> solution = algorytm.calculateGlobalOptimum();
+    std::vector<double> solution = algorytm.calculateGlobalOptimum(allOptimums);
 
     ui->ffxLABEL->setText(QString::number(testFunction(solution, dim)));
     ui->xLABEL->setText(QString::number(solution[0]));
     ui->yLABEL->setText(QString::number(solution[1]));
+    putGraph(allOptimums);
 }
 
 void MainWindow::on_pushButton_clicked() { MainWindow::calculateResult(); }
+
+void MainWindow::putGraph(std::vector<double> &allOptimums) {
+    QLineSeries *series = new QLineSeries();
+
+    for (unsigned long long int i = 0; i < allOptimums.size(); i++) {
+        series->append(allOptimums[i], i + 1);
+        qInfo() << allOptimums[i] << " " << i;
+    }
+    double min = *std::min_element(allOptimums.begin(), allOptimums.end()) - 0.005;
+    double max = *std::max_element(allOptimums.begin(), allOptimums.end());
+    // Tworzenie wykresu i dodanie serii danych
+    QChart *chart = new QChart();
+    chart->addSeries(series);
+    chart->legend()->hide();
+    chart->setTitle("");
+
+    // Ustawienie osi X i Y
+    QValueAxis *axisX = new QValueAxis;
+    axisX->setRange(0, (int)allOptimums.size() - 100);
+    axisX->setLabelFormat("%i");
+    axisX->setTitleText("Iteration");
+    chart->addAxis(axisX, Qt::AlignBottom);
+    series->attachAxis(axisX);
+
+    QValueAxis *axisY = new QValueAxis;
+    axisY->setRange(min, max);
+    axisY->setTitleText("Function value");
+    chart->addAxis(axisY, Qt::AlignLeft);
+    series->attachAxis(axisY);
+
+    // Tworzenie widoku wykresu i dodanie do kontenera
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    ui->graph->addWidget(chartView);
+}
