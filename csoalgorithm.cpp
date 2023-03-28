@@ -13,7 +13,7 @@
 CSOAlgorithm::CSOAlgorithm(int numberOfCockroaches, int dim, int maxIterations, double lowerBound,
                            double upperBound, double visual, double eps, double w,
                            double (*testFunction)(std::vector<double>&, int))
-    : random(rd()), bounds{lowerBound, upperBound}{
+    : random(rd()), bounds{lowerBound, upperBound} {
     this->numberOfCockroaches = numberOfCockroaches;
     this->dim                 = dim;
     this->maxIterations       = maxIterations;
@@ -26,11 +26,10 @@ CSOAlgorithm::CSOAlgorithm(int numberOfCockroaches, int dim, int maxIterations, 
 }
 
 std::vector<double> CSOAlgorithm::generateRandomSolution() {
-    std::vector<double>              solution;
+    std::vector<double> solution;
     solution.reserve(dim);
 
-    for (int i = 0; i < dim; i++)
-        solution.push_back(bounds(random));
+    for (int i = 0; i < dim; i++) solution.push_back(bounds(random));
 
     return solution;
 }
@@ -51,7 +50,7 @@ std::vector<double> CSOAlgorithm::findGlobalOptimum(std::vector<std::vector<doub
 
 std::vector<double> CSOAlgorithm::updatePosition(std::vector<double>& position,
                                                  std::vector<double>& optimumPosition,
-                                                 double              stepSize) {
+                                                 double               stepSize) {
     std::uniform_real_distribution<> dis{0, 1};
     std::vector<double>              newPosition(position.size());
     double                           rand, delta;
@@ -97,7 +96,7 @@ std::vector<double> CSOAlgorithm::updatePostionInLight(std::vector<double>& posi
     return newPosition;
 }
 
-std::vector<double> CSOAlgorithm::calculateGlobalOptimum(std::vector<double> &allOptimums) {
+std::vector<double> CSOAlgorithm::calculateGlobalOptimum(std::vector<double>& allOptimums) {
     std::vector<double>              globalOptimum;
     std::vector<double>              localOptimum;
     std::vector<std::vector<double>> cockroaches;

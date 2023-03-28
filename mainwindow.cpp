@@ -88,7 +88,7 @@ void MainWindow::putGraph(std::vector<double> &allOptimums) {
     QLineSeries *series = new QLineSeries();
 
     for (unsigned long long int i = 0; i < allOptimums.size(); i++) {
-        series->append(allOptimums[i], i + 1);
+        series->append(i + 1, allOptimums[i]);
         qInfo() << allOptimums[i] << " " << i;
     }
     double min = *std::min_element(allOptimums.begin(), allOptimums.end()) - 0.005;
@@ -101,7 +101,7 @@ void MainWindow::putGraph(std::vector<double> &allOptimums) {
 
     // Ustawienie osi X i Y
     QValueAxis *axisX = new QValueAxis;
-    axisX->setRange(0, (int)allOptimums.size() - 100);
+    axisX->setRange(0, (int)allOptimums.size());
     axisX->setLabelFormat("%i");
     axisX->setTitleText("Iteration");
     chart->addAxis(axisX, Qt::AlignBottom);
@@ -111,6 +111,7 @@ void MainWindow::putGraph(std::vector<double> &allOptimums) {
     axisY->setRange(min, max);
     axisY->setTitleText("Function value");
     chart->addAxis(axisY, Qt::AlignLeft);
+
     series->attachAxis(axisY);
 
     // Tworzenie widoku wykresu i dodanie do kontenera
