@@ -12,7 +12,8 @@
 
 CSOAlgorithm::CSOAlgorithm(int numberOfCockroaches, int dim, int maxIterations, double lowerBound,
                            double upperBound, double visual, double eps, double w,
-                           double (*testFunction)(std::vector<double>, int)) {
+                           double (*testFunction)(std::vector<double>&, int))
+    : random(rd()), bounds{lowerBound, upperBound}{
     this->numberOfCockroaches = numberOfCockroaches;
     this->dim                 = dim;
     this->maxIterations       = maxIterations;
@@ -24,21 +25,17 @@ CSOAlgorithm::CSOAlgorithm(int numberOfCockroaches, int dim, int maxIterations, 
     this->testFunction        = testFunction;
 }
 
-std::vector<double> CSOAlgorithm::generateRandomSolution(int dim, double lowerBound,
-                                                         double upperBound) {
-    std::random_device               rd;
-    std::mt19937                     random(rd());
-    std::uniform_real_distribution<> bounds{lowerBound, upperBound};
+std::vector<double> CSOAlgorithm::generateRandomSolution() {
     std::vector<double>              solution;
+    solution.reserve(dim);
 
-    for (int i = 0; i < dim; i++) solution.push_back(bounds(random));
+    for (int i = 0; i < dim; i++)
+        solution.push_back(bounds(random));
 
     return solution;
 }
 
-std::vector<double> CSOAlgorithm::findGlobalOptimum(std::vector<std::vector<double>> cockroaches,
-                                                    double (*testFunction)(std::vector<double>,
-                                                                           int)) {
+std::vector<double> CSOAlgorithm::findGlobalOptimum(std::vector<std::vector<double>>& cockroaches) {
     std::vector<double> globalOptimum;
     int                 dim = cockroaches[0].size();
 
@@ -52,11 +49,9 @@ std::vector<double> CSOAlgorithm::findGlobalOptimum(std::vector<std::vector<doub
     return globalOptimum;
 }
 
-std::vector<double> CSOAlgorithm::updatePosition(std::vector<double> position,
-                                                 std::vector<double> optimumPosition,
+std::vector<double> CSOAlgorithm::updatePosition(std::vector<double>& position,
+                                                 std::vector<double>& optimumPosition,
                                                  double              stepSize) {
-    std::random_device               rd;
-    std::mt19937                     random(rd());
     std::uniform_real_distribution<> dis{0, 1};
     std::vector<double>              newPosition(position.size());
     double                           rand, delta;
@@ -69,8 +64,8 @@ std::vector<double> CSOAlgorithm::updatePosition(std::vector<double> position,
     return newPosition;
 }
 
-double CSOAlgorithm::diffCockroaches(std::vector<double> cockroaches_I,
-                                     std::vector<double> cockroaches_II) {
+double CSOAlgorithm::diffCockroaches(std::vector<double>& cockroaches_I,
+                                     std::vector<double>& cockroaches_II) {
     double sum = 0;
 
     for (long long unsigned int i = 0; i < cockroaches_I.size(); i++) {
@@ -80,7 +75,8 @@ double CSOAlgorithm::diffCockroaches(std::vector<double> cockroaches_I,
 
     return sqrt(sum);
 }
-bool CSOAlgorithm::isLocalOptimum(std::vector<double> localOpt, std::vector<double> pos) {
+
+bool CSOAlgorithm::isLocalOptimum(std::vector<double>& localOpt, std::vector<double>& pos) {
     for (long long unsigned int i = 0; i < localOpt.size(); i++) {
         if (localOpt[i] != pos[i])
             return false;
@@ -89,11 +85,10 @@ bool CSOAlgorithm::isLocalOptimum(std::vector<double> localOpt, std::vector<doub
     return true;
 }
 
-std::vector<double> CSOAlgorithm::updatePostionInLight(std::vector<double> position) {
-    std::random_device               rd;
-    std::mt19937                     random(rd());
+std::vector<double> CSOAlgorithm::updatePostionInLight(std::vector<double>& position) {
     std::uniform_real_distribution<> dis(0, 1);
     std::vector<double>              newPosition;
+    newPosition.reserve(position.size());
 
     for (long long unsigned int i = 0; i < position.size(); i++) {
         newPosition.push_back(position[i] + dis(random));
@@ -106,17 +101,16 @@ std::vector<double> CSOAlgorithm::calculateGlobalOptimum(std::vector<double> &al
     std::vector<double>              globalOptimum;
     std::vector<double>              localOptimum;
     std::vector<std::vector<double>> cockroaches;
-    std::random_device               rd;
-    std::mt19937                     random(rd());
     std::uniform_real_distribution<> dis(1, (double)numberOfCockroaches);
     std::uniform_int_distribution<>  light(1, maxIterations);
     int                              lightIteration;
+    cockroaches.reserve(numberOfCockroaches);
 
     for (int i = 0; i < numberOfCockroaches; i++) {
-        cockroaches.push_back(generateRandomSolution(dim, lowerBound, upperBound));
+        cockroaches.push_back(generateRandomSolution());
     }
 
-    globalOptimum = findGlobalOptimum(cockroaches, testFunction);
+    globalOptimum = findGlobalOptimum(cockroaches);
 
     for (int t = 0; t < maxIterations; t++) {
         if (testFunction(globalOptimum, dim) <= eps) {
