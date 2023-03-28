@@ -113,7 +113,7 @@ std::vector<double> CSOAlgorithm::calculateGlobalOptimum(std::vector<double> &al
     globalOptimum = findGlobalOptimum(cockroaches);
 
     for (int t = 0; t < maxIterations; t++) {
-        if (testFunction(globalOptimum, dim) <= eps) {
+        if (std::fabs(testFunction(globalOptimum, dim)) <= eps) {
             return globalOptimum;
         }
 
@@ -153,11 +153,6 @@ std::vector<double> CSOAlgorithm::calculateGlobalOptimum(std::vector<double> &al
         if (!isLocalOptimum(globalOptimum, cockroaches[k])) {
             cockroaches[k] = globalOptimum;
         }
-        std::cout << "Iteration " << t << " ";
-        for (long long unsigned int i = 0; i < globalOptimum.size(); i++) {
-            std::cout << globalOptimum[i] << " ";
-        }
-        std::cout << std::endl;
         allOptimums.push_back(testFunction(globalOptimum, dim));
     }
 

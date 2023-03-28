@@ -10,7 +10,6 @@
 #include "testfunctions.h"
 
 int main(int argc, char *argv[]) {
-    std::cout << "dupa";
     QApplication a(argc, argv);
     MainWindow   w;
     w.show();
