@@ -164,6 +164,17 @@ void MainWindow::removeGraphs(QLayout *layout) {
 void MainWindow::functionGraph() {
     Q3DSurface *graph     = new Q3DSurface();
     QWidget *   container = QWidget::createWindowContainer(graph);
+    double (*testFunction)(std::vector<double> &, int);
+
+    if (ui->schwefelButton->isChecked())
+        testFunction = &Schwefel;
+    else if (ui->rastringButton->isChecked())
+        testFunction = &Rastring;
+    else if (ui->hiperButton->isChecked()) {
+        testFunction = &HiperElipsoide;
+    } else {
+        testFunction = &CustomFunction;
+    }
     //! [0]
 
     QSize screenSize = graph->screen()->size();
@@ -291,7 +302,8 @@ void MainWindow::functionGraph() {
 
     widget->show();
 
-    SurfaceGraph *modifier = new SurfaceGraph(graph);
+    SurfaceGraph *modifier = new SurfaceGraph(graph, ui->lbET->toPlainText().toFloat(),
+                                              ui->ubET->toPlainText().toFloat(), testFunction);
 
     QObject::connect(sqrtSinModelRB, &QRadioButton::toggled, modifier,
                      &SurfaceGraph::enableSqrtSinModel);

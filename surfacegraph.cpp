@@ -9,23 +9,33 @@
 #include <QtDataVisualization/QValue3DAxis>
 #include <QtGui/QImage>
 
-const int   sampleCountX       = 50;
-const int   sampleCountZ       = 50;
-const int   heightMapGridStepX = 6;
-const int   heightMapGridStepZ = 6;
-const float sampleMin          = -8.0f;
-const float sampleMax          = 8.0f;
+#include "testfunctions.h"
 
-SurfaceGraph::SurfaceGraph(Q3DSurface *surface) : m_graph(surface) {
+const int sampleCountX       = 150;
+const int sampleCountZ       = 150;
+const int heightMapGridStepX = 6;
+const int heightMapGridStepZ = 6;
+float     sampleMin          = 0;
+float     sampleMax          = 0;
+float     functionMin        = 0;
+float     functionMax        = 0;
+double (*functionToPrint)(std::vector<double> &, int);
+
+SurfaceGraph::SurfaceGraph(Q3DSurface *surface, float sampleMinimum, float sampleMaximum,
+                           double (*testFunction)(std::vector<double> &, int))
+    : m_graph(surface) {
     m_graph->setAxisX(new QValue3DAxis);
     m_graph->setAxisY(new QValue3DAxis);
     m_graph->setAxisZ(new QValue3DAxis);
+    sampleMin       = sampleMinimum;
+    sampleMax       = sampleMaximum;
+    functionToPrint = testFunction;
 
     //! [0]
     m_sqrtSinProxy  = new QSurfaceDataProxy();
     m_sqrtSinSeries = new QSurface3DSeries(m_sqrtSinProxy);
     //! [0]
-    fillSqrtSinProxy();
+    fillFunction();
 
     //! [2]
     QImage heightMapImage(":/maps/mountain");
@@ -41,7 +51,7 @@ SurfaceGraph::SurfaceGraph(Q3DSurface *surface) : m_graph(surface) {
 SurfaceGraph::~SurfaceGraph() { delete m_graph; }
 
 //! [1]
-void SurfaceGraph::fillSqrtSinProxy() {
+void SurfaceGraph::fillFunction() {
     float stepX = (sampleMax - sampleMin) / float(sampleCountX - 1);
     float stepZ = (sampleMax - sampleMin) / float(sampleCountZ - 1);
 
@@ -54,13 +64,17 @@ void SurfaceGraph::fillSqrtSinProxy() {
         float z     = qMin(sampleMax, (i * stepZ + sampleMin));
         int   index = 0;
         for (int j = 0; j < sampleCountX; j++) {
-            float x = qMin(sampleMax, (j * stepX + sampleMin));
-            float y = qSin(qAbs(x)) * qSin(qAbs(z)) + 0.5f;
+            float               x = qMin(sampleMax, (j * stepX + sampleMin));
+            std::vector<double> input{x, z};
+            float               y = functionToPrint(input, 2);
+            if (y > functionMax)
+                functionMax = y;
+            if (y < functionMin)
+                functionMin = y;
             (*newRow)[index++].setPosition(QVector3D(x, y, z));
         }
         *dataArray << newRow;
     }
-
     m_sqrtSinProxy->resetArray(dataArray);
 }
 //! [1]
@@ -74,7 +88,7 @@ void SurfaceGraph::enableSqrtSinModel(bool enable) {
         m_graph->axisX()->setLabelFormat("%.2f");
         m_graph->axisZ()->setLabelFormat("%.2f");
         m_graph->axisX()->setRange(sampleMin, sampleMax);
-        m_graph->axisY()->setRange(-1.0f, 9.0f);
+        m_graph->axisY()->setRange(functionMin, functionMax);
         m_graph->axisZ()->setRange(sampleMin, sampleMax);
         m_graph->axisX()->setLabelAutoRotation(30);
         m_graph->axisY()->setLabelAutoRotation(90);

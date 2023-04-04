@@ -5,16 +5,16 @@
 #define SURFACEGRAPH_H
 
 #include <QtDataVisualization/Q3DSurface>
-#include <QtDataVisualization/QSurfaceDataProxy>
 #include <QtDataVisualization/QHeightMapSurfaceDataProxy>
 #include <QtDataVisualization/QSurface3DSeries>
+#include <QtDataVisualization/QSurfaceDataProxy>
 #include <QtWidgets/QSlider>
 
-class SurfaceGraph : public QObject
-{
+class SurfaceGraph : public QObject {
     Q_OBJECT
 public:
-    explicit SurfaceGraph(Q3DSurface *surface);
+    explicit SurfaceGraph(Q3DSurface *surface, float sampleMinimum, float sampleMaximum,
+                          double (*testFunction)(std::vector<double> &, int));
     ~SurfaceGraph();
 
     void enableHeightMapModel(bool enable);
@@ -23,10 +23,14 @@ public:
     //! [0]
     void toggleModeNone() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionNone); }
     void toggleModeItem() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItem); }
-    void toggleModeSliceRow() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItemAndRow
-                                                          | QAbstract3DGraph::SelectionSlice); }
-    void toggleModeSliceColumn() { m_graph->setSelectionMode(QAbstract3DGraph::SelectionItemAndColumn
-                                                             | QAbstract3DGraph::SelectionSlice); }
+    void toggleModeSliceRow() {
+        m_graph->setSelectionMode(QAbstract3DGraph::SelectionItemAndRow |
+                                  QAbstract3DGraph::SelectionSlice);
+    }
+    void toggleModeSliceColumn() {
+        m_graph->setSelectionMode(QAbstract3DGraph::SelectionItemAndColumn |
+                                  QAbstract3DGraph::SelectionSlice);
+    }
     //! [0]
 
     void setBlackToYellowGradient();
@@ -46,26 +50,26 @@ public Q_SLOTS:
     void changeTheme(int theme);
 
 private:
-    Q3DSurface *m_graph;
+    Q3DSurface *                m_graph;
     QHeightMapSurfaceDataProxy *m_heightMapProxy;
-    QSurfaceDataProxy *m_sqrtSinProxy;
-    QSurface3DSeries *m_heightMapSeries;
-    QSurface3DSeries *m_sqrtSinSeries;
+    QSurfaceDataProxy *         m_sqrtSinProxy;
+    QSurface3DSeries *          m_heightMapSeries;
+    QSurface3DSeries *          m_sqrtSinSeries;
 
     QSlider *m_axisMinSliderX;
     QSlider *m_axisMaxSliderX;
     QSlider *m_axisMinSliderZ;
     QSlider *m_axisMaxSliderZ;
-    float m_rangeMinX;
-    float m_rangeMinZ;
-    float m_stepX;
-    float m_stepZ;
-    int m_heightMapWidth;
-    int m_heightMapHeight;
+    float    m_rangeMinX;
+    float    m_rangeMinZ;
+    float    m_stepX;
+    float    m_stepZ;
+    int      m_heightMapWidth;
+    int      m_heightMapHeight;
 
     void setAxisXRange(float min, float max);
     void setAxisZRange(float min, float max);
-    void fillSqrtSinProxy();
+    void fillFunction();
 };
 
-#endif // SURFACEGRAPH_H
+#endif  // SURFACEGRAPH_H
