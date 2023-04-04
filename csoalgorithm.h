@@ -9,16 +9,16 @@
 
 class CSOAlgorithm {
 private:
-    int    numberOfCockroaches;
-    int    dim;
-    int    maxIterations;
-    double lowerBound;
-    double upperBound;
-    double visual;
-    double eps;
-    double w;
-    std::random_device rd; // uniform int distribution.
-    std::mt19937 random; // pseudo random value, very fast
+    int                              numberOfCockroaches;
+    int                              dim;
+    int                              maxIterations;
+    double                           lowerBound;
+    double                           upperBound;
+    double                           visual;
+    double                           eps;
+    double                           w;
+    std::random_device               rd;      // uniform int distribution.
+    std::mt19937                     random;  // pseudo random value, very fast
     std::uniform_real_distribution<> bounds;
 
     double (*testFunction)(std::vector<double>&, int);
@@ -36,7 +36,7 @@ public:
                  double upperBound, double visual, double eśps, double w,
                  double (*testFunction)(std::vector<double>&, int));
 
-    std::vector<double> calculateGlobalOptimum(std::vector<double> &allOptimums);
+    std::vector<double> calculateGlobalOptimum(std::vector<double>& allOptimums);
 };
 
 #endif  // CSOALGORITHM_H

@@ -32,3 +32,7 @@ double HiperElipsoide(std::vector<double>& x, int dim) {
     }
     return sum;
 }
+double CustomFunction(std::vector<double>& x, int dim) {
+    srand(time(NULL));
+    return rand();
+}
