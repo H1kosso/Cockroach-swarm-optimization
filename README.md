@@ -17,6 +17,6 @@ The user has the ability to enter all the parameters, and then the graph of the 
 
 #### UI 
 
-![layout](http://prntscr.com/ElQDn9KEI-jO)
-![functionGraph](http://prntscr.com/d7TjWclOQIUK)
+![layout](https://user-images.githubusercontent.com/115038725/232155091-b3b7e262-3e3e-4b3d-89f5-2e987cce1e1e.png)
+![functionGraph](https://user-images.githubusercontent.com/115038725/232155132-39445030-8d9f-422a-a732-8f3c6ab39442.png)
 
