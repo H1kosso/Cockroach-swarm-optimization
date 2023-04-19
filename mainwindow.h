@@ -1,7 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <Q3DSurface>
+#include <QLayout>
 #include <QMainWindow>
+#include <QVBoxLayout>
+#include "testfunctions.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,6 +25,9 @@ public:
     void setDefaultParametersRastring();
     void calculateResult();
     void putGraph(std::vector<double> &allOptimums);
+    void removeGraphs(QLayout *layout);
+    void functionGraph();
+        Ui::MainWindow *ui;
 
 private slots:
     void on_schwefelButton_toggled();
@@ -32,6 +39,6 @@ private slots:
     void on_pushButton_clicked();
 
 private:
-    Ui::MainWindow *ui;
+
 };
 #endif  // MAINWINDOW_H

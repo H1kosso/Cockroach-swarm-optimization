@@ -1,4 +1,4 @@
-QT       += core gui charts
+QT       += core gui charts datavisualization
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,11 +12,14 @@ SOURCES += \
     csoalgorithm.cpp \
     main.cpp \
     mainwindow.cpp \
+    surfacegraph.cpp \
     testfunctions.cpp
 
 HEADERS += \
+    exprtk.hpp \
     csoalgorithm.h \
     mainwindow.h \
+    surfacegraph.h \
     testfunctions.h
 
 FORMS += \
@@ -26,3 +29,5 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+QMAKE_CXXFLAGS += /bigobj
