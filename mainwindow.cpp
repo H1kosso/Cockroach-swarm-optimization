@@ -24,10 +24,11 @@
 #include <QtWidgets/QWidget>
 #include <algorithm>
 #include <string>
-
+#include <QDebug>
 #include "csoalgorithm.h"
 #include "surfacegraph.h"
 #include "ui_mainwindow.h"
+#include "testfunctions.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -94,6 +95,7 @@ void MainWindow::calculateResult() {
         testFunction = &HiperElipsoide;
     } else {
         testFunction = &CustomFunction;
+
     }
 
     CSOAlgorithm algorytm(numberOfCockroaches, dim, maxIterations, lowerBound, upperBound, visual,
@@ -108,14 +110,18 @@ void MainWindow::calculateResult() {
     functionGraph();
 }
 
-void MainWindow::on_pushButton_clicked() { MainWindow::calculateResult(); }
+void MainWindow::on_pushButton_clicked() {
+    setFunctionToParse(ui->functionET->toPlainText().toStdString());
+    MainWindow::calculateResult();
+
+}
 
 void MainWindow::putGraph(std::vector<double> &allOptimums) {
     QLineSeries *series = new QLineSeries();
 
     for (unsigned long long int i = 0; i < allOptimums.size(); i++) {
         series->append(i + 1, allOptimums[i]);
-        qInfo() << allOptimums[i] << " " << i;
+        //qInfo() << allOptimums[i] << " " << i;
     }
     double min = *std::min_element(allOptimums.begin(), allOptimums.end()) - 0.005;
     double max = *std::max_element(allOptimums.begin(), allOptimums.end());

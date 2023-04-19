@@ -8,6 +8,9 @@
 #include "csoalgorithm.h"
 #include "mainwindow.h"
 #include "testfunctions.h"
+#include "exprtk.hpp"
+
+
 
 int main(int argc, char *argv[]) {
     qputenv("QSG_RHI_BACKEND", "opengl");
