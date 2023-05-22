@@ -109,51 +109,58 @@ std::vector<double> CSOAlgorithm::calculateGlobalOptimum(std::vector<double>& al
         cockroaches.push_back(generateRandomSolution());
     }
 
-    globalOptimum = findGlobalOptimum(cockroaches);
+    try{
+        globalOptimum = findGlobalOptimum(cockroaches);
 
-    for (int t = 0; t < maxIterations; t++) {
-        if (std::fabs(testFunction(globalOptimum, dim)) <= eps) {
-            return globalOptimum;
-        }
-
-        lightIteration = light(random);
-
-        for (int i = 0; i < numberOfCockroaches; i++) {
-            for (int j = 0; j < numberOfCockroaches; j++) {
-                if (diffCockroaches(cockroaches[i], cockroaches[j]) < visual &&
-                    (testFunction(cockroaches[j], dim) < testFunction(cockroaches[i], dim))) {
-                    localOptimum = cockroaches[j];
-                }
+        for (int t = 0; t < maxIterations; t++) {
+            if (std::fabs(testFunction(globalOptimum, dim)) <= eps) {
+                return globalOptimum;
             }
 
-            if (isLocalOptimum(localOptimum, cockroaches[i])) {
-                cockroaches[i] = updatePosition(cockroaches[i], globalOptimum, w);
-            } else {
-                cockroaches[i] = updatePosition(cockroaches[i], localOptimum, w);
-            }
+            lightIteration = light(random);
 
-            if (testFunction(cockroaches[i], dim) < testFunction(globalOptimum, dim)) {
-                globalOptimum = cockroaches[i];
-            }
-        }
-
-        if (t == lightIteration) {
             for (int i = 0; i < numberOfCockroaches; i++) {
-                cockroaches[i] = updatePostionInLight(cockroaches[i]);
+                for (int j = 0; j < numberOfCockroaches; j++) {
+                    if (diffCockroaches(cockroaches[i], cockroaches[j]) < visual &&
+                        (testFunction(cockroaches[j], dim) < testFunction(cockroaches[i], dim))) {
+                        localOptimum = cockroaches[j];
+                    }
+                }
+
+                if (isLocalOptimum(localOptimum, cockroaches[i])) {
+                    cockroaches[i] = updatePosition(cockroaches[i], globalOptimum, w);
+                } else {
+                    cockroaches[i] = updatePosition(cockroaches[i], localOptimum, w);
+                }
 
                 if (testFunction(cockroaches[i], dim) < testFunction(globalOptimum, dim)) {
                     globalOptimum = cockroaches[i];
                 }
             }
+
+            if (t == lightIteration) {
+                for (int i = 0; i < numberOfCockroaches; i++) {
+                    cockroaches[i] = updatePostionInLight(cockroaches[i]);
+
+                    if (testFunction(cockroaches[i], dim) < testFunction(globalOptimum, dim)) {
+                        globalOptimum = cockroaches[i];
+                    }
+                }
+            }
+
+            int k = dis(random);
+
+            if (!isLocalOptimum(globalOptimum, cockroaches[k])) {
+                cockroaches[k] = globalOptimum;
+            }
+            allOptimums.push_back(testFunction(globalOptimum, dim));
         }
 
-        int k = dis(random);
 
-        if (!isLocalOptimum(globalOptimum, cockroaches[k])) {
-            cockroaches[k] = globalOptimum;
-        }
-        allOptimums.push_back(testFunction(globalOptimum, dim));
     }
-
+    catch (const std::invalid_argument& ex){
+        std::cerr << "Exception: " << ex.what() << '\n';
+        std::exit(-1);
+    }
     return globalOptimum;
 }

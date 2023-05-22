@@ -15,6 +15,17 @@
 const double PI = 3.14159265;
 std::string functionToParse ="";
 
+static inline size_t factorial(int n){
+    if (n < 0){
+        throw std::invalid_argument("Factorial with negative argument\n");
+    }
+    size_t result = 1;
+    for (int i = 2; i <= n; i++){
+        result *= i;
+    }
+    return result;
+}
+
 double Schwefel(std::vector<double>& x, int dim) {
     double       sum           = 0.0;
     const double schwefelConst = 418.9829;
@@ -40,6 +51,49 @@ double HiperElipsoide(std::vector<double>& x, int dim) {
     }
     return sum;
 }
+
+
+double queueFun(std::vector<double>& x, int dim){
+    if (x.empty()){
+        throw std::invalid_argument("Input is empty\n");
+    }
+    double m = x[1];
+    double N = x[0];
+
+    double p0{}, pN{};
+
+    double lambda = 40.0;
+    double mi = 20.0;
+    double r = 5.0;
+    double c1 = 1.0;
+    double c2 = 10.0;
+
+    double rho = lambda / mi;
+    size_t mFactorial = factorial(m);
+
+    double sum = 0, roDivM = rho / m;
+    if (roDivM == 1) {
+        for (int k = 0; k <= m - 1; k++) {
+            sum += pow(rho, k) / factorial(k);
+        }
+        p0 = 1 / (sum + (pow(rho, m) / mFactorial) * (N + 1.0));
+    }
+    else {
+        for (int k = 0; k <= m - 1; k++) {
+            sum += pow(rho, k) / factorial(k);
+        }
+        p0 = 1 / (sum + (pow(rho, m) / mFactorial) * ((1.0 - (pow(roDivM, N + 1.0))) / (1.0 - roDivM)));
+    }
+
+    // Same as pOdmowy
+    pN = (pow(rho, m + N) / pow(m, N)) * (p0 / mFactorial);
+
+    // negative for max
+    return -(lambda * (1 - pN) * r - c1 * N - c2 * m);
+}
+
+
+
 void setFunctionToParse(std::string expresion){
     functionToParse = expresion;
 }

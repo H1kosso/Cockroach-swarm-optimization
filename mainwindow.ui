@@ -595,7 +595,7 @@ color: black;</string>
      </rect>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton">
+   <widget class="QRadioButton" name="defaultButton">
     <property name="geometry">
      <rect>
       <x>1170</x>

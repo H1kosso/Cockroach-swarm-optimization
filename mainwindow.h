@@ -23,6 +23,7 @@ public:
     void setDefaultParametersSchwefel();
     void setDefaultParametersHiper();
     void setDefaultParametersRastring();
+    void setDefaultParametersDefault();
     void calculateResult();
     void putGraph(std::vector<double> &allOptimums);
     void removeGraphs(QLayout *layout);
@@ -36,7 +37,11 @@ private slots:
 
     void on_hiperButton_clicked();
 
+    void on_defaultButton_clicked();
+
     void on_pushButton_clicked();
+
+
 
 private:
 

@@ -69,11 +69,24 @@ void MainWindow::setDefaultParametersHiper() {
     ui->epsET->setPlainText("0.001");
 }
 
+void MainWindow::setDefaultParametersDefault(){
+    ui->cockroachNumberET->setPlainText("300");
+    ui->maxIterationsET->setPlainText("60");
+    ui->lbET->setPlainText("0");
+    ui->ubET->setPlainText("10");
+    ui->stepET->setPlainText("0.1");
+    ui->visibilityET->setPlainText("5");
+    ui->dimET->setPlainText("2");
+    ui->epsET->setPlainText("0.001");
+}
+
 void MainWindow::on_schwefelButton_toggled() { setDefaultParametersSchwefel(); }
 
 void MainWindow::on_rastringButton_clicked() { MainWindow::setDefaultParametersRastring(); }
 
-void MainWindow::on_hiperButton_clicked() { MainWindow::setDefaultParametersHiper(); }
+void MainWindow::on_hiperButton_clicked() {MainWindow::setDefaultParametersHiper();}
+
+void MainWindow::on_defaultButton_clicked() { MainWindow::setDefaultParametersDefault(); }
 
 void MainWindow::calculateResult() {
     int                 numberOfCockroaches = ui->cockroachNumberET->toPlainText().toInt();
@@ -94,8 +107,7 @@ void MainWindow::calculateResult() {
     else if (ui->hiperButton->isChecked()) {
         testFunction = &HiperElipsoide;
     } else {
-        testFunction = &CustomFunction;
-
+        testFunction = &queueFun;
     }
 
     CSOAlgorithm algorytm(numberOfCockroaches, dim, maxIterations, lowerBound, upperBound, visual,
@@ -338,3 +350,5 @@ void MainWindow::functionGraph() {
     modeItemRB->setChecked(true);
     themeList->setCurrentIndex(2);
 }
+
+
