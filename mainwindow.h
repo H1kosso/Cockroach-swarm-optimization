@@ -28,7 +28,7 @@ public:
     void putGraph(std::vector<double> &allOptimums);
     void removeGraphs(QLayout *layout);
     void functionGraph();
-        Ui::MainWindow *ui;
+    Ui::MainWindow *ui;
 
 private slots:
     void on_schwefelButton_toggled();
@@ -42,6 +42,10 @@ private slots:
     void on_pushButton_clicked();
 
 
+
+    void on_que_toggled(bool checked);
+
+    void on_que_clicked();
 
 private:
 

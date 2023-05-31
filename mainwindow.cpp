@@ -32,6 +32,7 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
+            ui->queWidget->hide();
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -79,6 +80,12 @@ void MainWindow::setDefaultParametersDefault(){
     ui->visibilityET->setPlainText("0.1");
     ui->dimET->setPlainText("2");
     ui->epsET->setPlainText("0.5");
+
+    ui->miET->setPlainText("20.0");
+    ui->c1ET->setPlainText("1.0");
+    ui->c2ET->setPlainText("7.0");
+    ui->rET->setPlainText("5.0");
+    ui->lambdaET->setPlainText("40.0");
 }
 
 void MainWindow::on_schwefelButton_toggled() { setDefaultParametersSchwefel(); }
@@ -107,8 +114,10 @@ void MainWindow::calculateResult() {
         testFunction = &Rastring;
     else if (ui->hiperButton->isChecked()) {
         testFunction = &HiperElipsoide;
-    } else {
+    } else if( ui->que->isChecked()){
         testFunction = &queueFun;
+    } else{
+        testFunction = &CustomFunction;
     }
 
     CSOAlgorithm algorytm(numberOfCockroaches, dim, maxIterations, lowerBound, upperBound, visual,
@@ -125,6 +134,14 @@ void MainWindow::calculateResult() {
 
 void MainWindow::on_pushButton_clicked() {
     setFunctionToParse(ui->functionET->toPlainText().toStdString());
+    if(ui->que->isChecked())
+        setParametertsForQue(
+                    ui->lambdaET->toPlainText().toDouble(),
+                    ui->miET->toPlainText().toDouble(),
+                    ui->rET->toPlainText().toDouble(),
+                    ui->c1ET->toPlainText().toDouble(),
+                    ui->c2ET->toPlainText().toDouble()
+                    );
     MainWindow::calculateResult();
 
 }
@@ -191,8 +208,10 @@ void MainWindow::functionGraph() {
         testFunction = &Rastring;
     else if (ui->hiperButton->isChecked()) {
         testFunction = &HiperElipsoide;
-    } else {
-        testFunction = &queueFun;
+    } else if(ui->que->isChecked()){
+       testFunction = &queueFun;
+    } else{
+         testFunction = &CustomFunction;
     }
     //! [0]
 
@@ -352,4 +371,19 @@ void MainWindow::functionGraph() {
     themeList->setCurrentIndex(2);
 }
 
+
+
+void MainWindow::on_que_toggled(bool checked)
+{
+    if(!checked)
+        ui->queWidget->hide();
+    else
+         ui->queWidget->show();
+}
+
+
+void MainWindow::on_que_clicked()
+{
+    setDefaultParametersDefault();
+}
 

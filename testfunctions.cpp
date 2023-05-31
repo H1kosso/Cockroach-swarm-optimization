@@ -7,13 +7,16 @@
 #include "exprtk.hpp"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QObject>
-#include <QDebug>
-#include "testfunctions.h"
+
 
 
 const double PI = 3.14159265;
 std::string functionToParse ="";
+double lambda = 0;
+double mi = 0;
+double r = 0;
+double c1 = 0;
+double c2 = 0;
 
 static inline size_t factorial(int n){
     if (n < 0){
@@ -52,6 +55,13 @@ double HiperElipsoide(std::vector<double>& x, int dim) {
     return sum;
 }
 
+void setParametertsForQue(double _lambda, double _mi, double _r, double _c1, double _c2){
+    lambda = _lambda;
+    mi = _mi;
+    r = _r;
+    c1 = _c1;
+    c2 = _c2;
+}
 
 double queueFun(std::vector<double>& x, int dim){
     if (x.empty()){
@@ -62,12 +72,8 @@ double queueFun(std::vector<double>& x, int dim){
 
     double p0{}, pN{};
 
-    // Parameters
-    double lambda = 40.0;
-    double mi = 20.0;
-    double r = 5.0;
-    double c1 = 1.0;
-    double c2 = 10.0;
+    //setParametertsForQue(40.0, 20.0, 5.0, 1.0, 10.0);
+
 
     double rho = lambda / mi;
     size_t mFactorial = factorial(m);
