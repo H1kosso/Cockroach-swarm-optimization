@@ -62,6 +62,7 @@ double queueFun(std::vector<double>& x, int dim){
 
     double p0{}, pN{};
 
+    // Parameters
     double lambda = 40.0;
     double mi = 20.0;
     double r = 5.0;
@@ -88,8 +89,11 @@ double queueFun(std::vector<double>& x, int dim){
     // Same as pOdmowy
     pN = (pow(rho, m + N) / pow(m, N)) * (p0 / mFactorial);
 
-    // negative for max
-    return -(lambda * (1 - pN) * r - c1 * N - c2 * m);
+    double result = -(lambda * (1 - pN) * r - c1 * N - c2 * m);
+    if (isnan(result)){
+        throw std::domain_error("Result is NaN. Consider domain of the problem\n");
+    }
+    return result;
 }
 
 

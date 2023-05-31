@@ -69,15 +69,16 @@ void MainWindow::setDefaultParametersHiper() {
     ui->epsET->setPlainText("0.001");
 }
 
+// Default parameters for queue function
 void MainWindow::setDefaultParametersDefault(){
-    ui->cockroachNumberET->setPlainText("300");
-    ui->maxIterationsET->setPlainText("60");
-    ui->lbET->setPlainText("0");
-    ui->ubET->setPlainText("10");
-    ui->stepET->setPlainText("0.1");
-    ui->visibilityET->setPlainText("5");
+    ui->cockroachNumberET->setPlainText("1400");
+    ui->maxIterationsET->setPlainText("100");
+    ui->lbET->setPlainText("1");
+    ui->ubET->setPlainText("7");
+    ui->stepET->setPlainText("0.01");
+    ui->visibilityET->setPlainText("0.1");
     ui->dimET->setPlainText("2");
-    ui->epsET->setPlainText("0.001");
+    ui->epsET->setPlainText("0.5");
 }
 
 void MainWindow::on_schwefelButton_toggled() { setDefaultParametersSchwefel(); }
@@ -191,7 +192,7 @@ void MainWindow::functionGraph() {
     else if (ui->hiperButton->isChecked()) {
         testFunction = &HiperElipsoide;
     } else {
-        testFunction = &CustomFunction;
+        testFunction = &queueFun;
     }
     //! [0]
 

@@ -11,6 +11,8 @@
 
 #include "testfunctions.h"
 
+#include <iostream>
+
 const int sampleCountX       = 150;
 const int sampleCountZ       = 150;
 const int heightMapGridStepX = 6;
@@ -66,7 +68,15 @@ void SurfaceGraph::fillFunction() {
         for (int j = 0; j < sampleCountX; j++) {
             float               x = qMin(sampleMax, (j * stepX + sampleMin));
             std::vector<double> input{x, z};
-            float               y = functionToPrint(input, 2);
+            float               y{};
+            try{
+                y = functionToPrint(input, 2);
+            }
+            catch (const std::logic_error& ex){
+                std::cerr << "Exception: " << ex.what() << '\n';
+                exit(1);
+            }
+
             if (y > functionMax)
                 functionMax = y;
             if (y < functionMin)
